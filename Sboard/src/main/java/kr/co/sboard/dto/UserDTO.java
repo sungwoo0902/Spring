@@ -1,5 +1,9 @@
 package kr.co.sboard.dto;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import kr.co.sboard.entity.UserEntity;
 import lombok.*;
 
@@ -7,9 +11,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class UserDTO {
 
     private String uid;
@@ -43,4 +47,5 @@ public class UserDTO {
                 .leaveDate(leaveDate)
                 .build();
     }
+
 }

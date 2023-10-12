@@ -1,9 +1,6 @@
-jwt:
-    issuer: chhak0503@gmail.com
-    secret: oNlbC1SXEr6jig2XEvlZdhFULBbhukaY
 logging:
     file:
-        name: log/Ch11.log
+        name: log/Sboard.log
     level:
         jdbc:
             connection: info
@@ -33,7 +30,7 @@ spring:
     jpa:
         database: mysql
         hibernate:
-            ddl-auto: update
+            ddl-auto: none
             naming:
                 physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         properties:
@@ -47,3 +44,12 @@ spring:
             password: 1234
     thymeleaf:
         cache: false
+        # prefix 설정을 안하면 HTML 수정 후 브라우저에서 새로고침 반영안됨
+        prefix: file:src/main/resources/templates/
+
+    servlet:
+        multipart:
+            location: src/main/resources/static/file/
+            max-file-size: 10MB
+
+

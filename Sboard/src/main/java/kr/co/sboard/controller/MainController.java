@@ -11,9 +11,9 @@ public class MainController {
     public String index(Authentication authentication){
 
         if(authentication.isAuthenticated()){
-            return "/index";
+            return "forward:/article/list";
         }else{
-            return "redirect:/user/login";
+            return "forward:/user/login";
         }
 
 
