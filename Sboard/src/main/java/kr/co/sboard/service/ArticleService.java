@@ -2,11 +2,14 @@ package kr.co.sboard.service;
 
 import kr.co.sboard.dto.ArticleDTO;
 import kr.co.sboard.dto.FileDTO;
+import kr.co.sboard.dto.PageRequestDTO;
+import kr.co.sboard.dto.PageResponseDTO;
 import kr.co.sboard.entity.ArticleEntity;
 import kr.co.sboard.repository.ArticleRepository;
 import kr.co.sboard.repository.FileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +23,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.stream.Collectors.toList;
+
 @Log4j2
 @RequiredArgsConstructor
 @Service
@@ -27,13 +32,29 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final FileRepository fileRepository;
+    private final ModelMapper modelMapper; // Entity를 DTO로 자동으로 변환시켜준다.
 
-    public Page<ArticleEntity> findByParent(int pg){
+    public PageResponseDTO findByParentAndCate(PageRequestDTO pageRequestDTO){
 
-        Pageable pageable = PageRequest.of(pg-1, 10, Sort.Direction.DESC, "no");
-        Page<ArticleEntity> result = articleRepository.findByParent(0, pageable);
+        Pageable pageable = pageRequestDTO.getPageable("no");
 
-        return result;
+
+        // Pageable pageable = PageRequest.of(pg-1, 10, Sort.Direction.DESC, "no");
+        Page<ArticleEntity> result = articleRepository.findByParentAndCate(0, pageRequestDTO.getCate(), pageable);
+
+        List<ArticleDTO> dtoList = result.getContent()
+                                        .stream()
+                                        .map(entity -> modelMapper.map(entity, ArticleDTO.class))
+                                        .toList();
+
+        int totalElement = (int) result.getTotalElements();
+
+
+        return PageResponseDTO.builder()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total(totalElement)
+                .build();
 
     }
 
